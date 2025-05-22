@@ -2,7 +2,6 @@ package com.ravenprojects.uchuva_bank.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,10 +10,16 @@ import lombok.*;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
-@Table(name = "users")
+@Table(
+        name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"id_document_type", "id_document_number"})
+        }
+)
 public class User {
 
     @Id
@@ -45,7 +50,7 @@ public class User {
 
     @Email
     @NotBlank
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
 
     @Size(min = 10, max = 10)
@@ -56,6 +61,9 @@ public class User {
     @NotBlank
     @Column(nullable = false)
     private String address;
+
+    @Column(nullable = false)
+    private boolean active = true;
 
     @Column(name = "registration_date", nullable = false, updatable = false)
     private LocalDateTime registrationDate;
